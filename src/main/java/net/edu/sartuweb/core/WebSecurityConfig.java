@@ -35,6 +35,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
@@ -102,7 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().authorizeRequests()
 			.and()
 			.authorizeRequests()	
-				.antMatchers("/", "/inicio").permitAll()
+				.antMatchers("/").permitAll()
 				.anyRequest().authenticated()
 			.and()
 				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
@@ -126,6 +127,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //		OauthFilter oauthFilter = new OauthFilter("/");
 		sartuFilter.setRestTemplate(sartuRestTemplate());
 		sartuFilter.setTokenServices(tokenServices());
+		sartuFilter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/inicio"));
 //		filter.setTokenServices(new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId()));
 		return sartuFilter;
 	}
