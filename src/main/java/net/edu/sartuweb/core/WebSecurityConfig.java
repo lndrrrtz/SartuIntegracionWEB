@@ -26,6 +26,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
@@ -36,12 +37,16 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
 
-import net.edu.sartuweb.web.security.Oauth2ClientFilter;
 import net.edu.sartuweb.web.security.SartuJwtConverter;
+import net.edu.sartuweb.web.security.SartuLogoutHandler;
+import net.edu.sartuweb.web.security.SartuLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -101,14 +106,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.addFilterAfter(oAuth2ClientContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
 			.addFilterAfter(ssoFilter(), OAuth2ClientContextFilter.class).httpBasic()
 			.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().authorizeRequests()
+			
 			.and()
 			.authorizeRequests()	
 				.antMatchers("/").permitAll()
 				.anyRequest().authenticated()
-			.and()
+			
+				.and()
 				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
-//				.and().logout().permitAll().and()
-			.csrf().disable();
+			
+			.httpBasic().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
+			
+			.and()
+				.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.addLogoutHandler(sartuLogoutHandler())
+//				.logoutSuccessHandler(sartuLogoutSuccessHandler())
+				.invalidateHttpSession(true).clearAuthentication(true)
+				.deleteCookies("JSESSIONID")
+			
+			.and()
+				.csrf().disable();
 	}
 	
 	@Bean
@@ -122,8 +140,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Bean
-	public Oauth2ClientFilter ssoFilter() {
-		Oauth2ClientFilter sartuFilter = new Oauth2ClientFilter("/");
+	public OAuth2ClientAuthenticationProcessingFilter ssoFilter() {
+//	public Oauth2ClientFilter ssoFilter() {
+//		Oauth2ClientFilter sartuFilter = new Oauth2ClientFilter("/");
+		OAuth2ClientAuthenticationProcessingFilter sartuFilter = new OAuth2ClientAuthenticationProcessingFilter("/");
 //		OauthFilter oauthFilter = new OauthFilter("/");
 		sartuFilter.setRestTemplate(sartuRestTemplate());
 		sartuFilter.setTokenServices(tokenServices());
@@ -202,4 +222,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new RsaVerifier((RSAPublicKey)publicKey);
 	}
 	
+	@Bean
+	public LogoutHandler sartuLogoutHandler() {
+		return new SartuLogoutHandler();
+	}
+
+	@Bean
+	public LogoutSuccessHandler sartuLogoutSuccessHandler() {
+		return new SartuLogoutSuccessHandler();
+	}
 }

@@ -6,3 +6,10 @@
 
 ID: ${usuarioAutenticado.id} <br />
 NOMBRE: ${usuarioAutenticado.nombre}
+
+<br />
+<br />
+
+<spring:url var="urlLogout" value="/logout"/>
+<a href="${urlLogout}">Logout</a>
+<!-- <a href="http://localhost:9081/SartuOauthWEB/oauth/logout?redirectUri=">Logout</a> -->

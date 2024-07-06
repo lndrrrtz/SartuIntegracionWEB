@@ -1,7 +1,6 @@
 package net.edu.sartuweb.web.security;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.filter.OAuth2AuthenticationFailureEvent;
@@ -21,11 +19,8 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticat
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
-
-import net.edu.sartuweb.core.beans.UsuarioAutenticado;
 
 
 public class Oauth2ClientFilter extends OAuth2ClientAuthenticationProcessingFilter {
@@ -65,22 +60,23 @@ public class Oauth2ClientFilter extends OAuth2ClientAuthenticationProcessingFilt
 		}
 		try {
 			
-			OAuth2Authentication oAuth2Authentication = tokenServices.loadAuthentication(accessToken.getValue());
-			Map<String,Object> details = (Map)oAuth2Authentication.getDetails();
+			return tokenServices.loadAuthentication(accessToken.getValue());
 			
-			UsuarioAutenticado usuarioAutenticado = new UsuarioAutenticado();
-			usuarioAutenticado.setUsername((String)details.get("user_name"));
-			usuarioAutenticado.setId((String)details.get("id"));
-			usuarioAutenticado.setNombre((String)details.get("nombre"));
-			usuarioAutenticado.setDni((String)details.get("dni"));
-			usuarioAutenticado.setEmail((String)details.get("email"));
-			
-			SartuAuthenticationToken sartuAuthenticationToken = new SartuAuthenticationToken(usuarioAutenticado, oAuth2Authentication.getAuthorities());
-			sartuAuthenticationToken.setDetails(oAuth2Authentication.getDetails());
-			
-			publish(new AuthenticationSuccessEvent(sartuAuthenticationToken));
-			
-			return sartuAuthenticationToken;
+//			Map<String,Object> details = (Map)oAuth2Authentication.getDetails();
+//			
+//			UsuarioAutenticado usuarioAutenticado = new UsuarioAutenticado();
+//			usuarioAutenticado.setUsername((String)details.get("user_name"));
+//			usuarioAutenticado.setId((String)details.get("id"));
+//			usuarioAutenticado.setNombre((String)details.get("nombre"));
+//			usuarioAutenticado.setDni((String)details.get("dni"));
+//			usuarioAutenticado.setEmail((String)details.get("email"));
+//			
+//			SartuAuthenticationToken sartuAuthenticationToken = new SartuAuthenticationToken(usuarioAutenticado, oAuth2Authentication.getAuthorities());
+//			sartuAuthenticationToken.setDetails(oAuth2Authentication.getDetails());
+//			
+//			publish(new AuthenticationSuccessEvent(sartuAuthenticationToken));
+//			
+//			return sartuAuthenticationToken;
 		}
 		catch (InvalidTokenException e) {
 			String mensajeError = "No se puede obtener los detalles del usuario mediante el token";
