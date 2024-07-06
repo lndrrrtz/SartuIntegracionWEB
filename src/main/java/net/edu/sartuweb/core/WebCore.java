@@ -5,6 +5,8 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Configuration
-//@PropertySource(value="classpath:/net/edu/sartuweb/core/config/sartuweb.properties", ignoreResourceNotFound = true)
+@PropertySource(value="classpath:/net/edu/sartuweb/core/config/sartuweb.properties", ignoreResourceNotFound = true)
 @ComponentScan({ "net.edu.sartuweb.core.daos.impl", "net.edu.sartuweb.core.facades.impl" })
 public class WebCore {
 
@@ -46,10 +48,10 @@ public class WebCore {
 		return new DataSourceTransactionManager(dataSource);
 	}
 
-//	@Bean
-//	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-//		return new PropertySourcesPlaceholderConfigurer();
-//	}
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -77,5 +79,4 @@ public class WebCore {
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		return mapper;
 	}
-	
 }
