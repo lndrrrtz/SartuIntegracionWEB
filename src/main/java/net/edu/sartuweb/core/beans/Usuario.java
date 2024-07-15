@@ -1,24 +1,32 @@
 
 package net.edu.sartuweb.core.beans;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import net.edu.sartuweb.core.enums.TipoUsuario;
 
-public class Usuario implements Serializable{
+public class Usuario {
 
-	private static final long serialVersionUID = 3268778679107821287L;
-
+	@NotEmpty
 	private String id;
 	
+	@NotEmpty
 	private String contrasena;
 	
+	@NotEmpty
 	private String nombre;
 	
+	@NotEmpty
 	private String dni;
 	
+	@Email
+	@NotEmpty
 	private String email;
 	
+	@NotNull
 	private TipoUsuario tipo;
 
 	public String getId() {

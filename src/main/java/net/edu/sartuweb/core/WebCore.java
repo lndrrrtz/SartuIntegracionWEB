@@ -79,4 +79,5 @@ public class WebCore {
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		return mapper;
 	}
+	
 }

@@ -33,7 +33,7 @@ public class SartuLogoutHandler  implements LogoutHandler {
 			}
 			
 		} else {
-			try {
+			try { 
 				response.sendRedirect("/SartuIntegracionWEB");
 			} catch (IOException e) {
 				LOGGER.error("Error al redirigir a página principal", e);

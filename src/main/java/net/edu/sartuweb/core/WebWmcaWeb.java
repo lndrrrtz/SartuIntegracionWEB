@@ -81,4 +81,5 @@ public class WebWmcaWeb extends WebMvcConfigurerAdapter {
 	public MessageSourceAccessor messageSourceAccessor() {
 		return new MessageSourceAccessor(this.messageSource());
 	}
+	
 }

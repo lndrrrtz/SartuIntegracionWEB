@@ -48,6 +48,11 @@ import net.edu.sartuweb.web.security.SartuJwtConverter;
 import net.edu.sartuweb.web.security.SartuLogoutHandler;
 import net.edu.sartuweb.web.security.SartuLogoutSuccessHandler;
 
+/**
+ * Configura la autenticación y los filtros de seguridad para la aplicación.
+ * 
+ * Personaliza la configuración de seguridad de Spring Security.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableOAuth2Client
@@ -129,26 +134,46 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf().disable();
 	}
 	
+	/**
+	 * Define un bean que se utiliza para realizar solicitudes REST con OAuth 2
+	 * 
+	 * @return {@link OAuth2RestTemplate} confirado con los datos de Sartu (SSO) y el contexto de OAuth 2
+ 	 */
 	@Bean
 	public OAuth2RestTemplate sartuRestTemplate() {
 		return new OAuth2RestTemplate(oauthResource(), oauth2ClientContext);
 	}
 	
+	/**
+	 * Define el filtro que se encarga del contexto de OAuth 2
+	 * 
+	 * @return {@link OAuth2ClientContextFilter) 
+	 */
 	@Bean
 	public OAuth2ClientContextFilter oAuth2ClientContextFilter() {
 		return new OAuth2ClientContextFilter();
 	}
 	
+	/**
+	 * Configura el filtro que se encarga de la autenticación del cliente OAuth 2
+	 * 
+	 * @return {@link OAuth2ClientAuthenticationProcessingFilter} con la configuración para manejar la identificación del usuario
+	 */
 	@Bean
 	public OAuth2ClientAuthenticationProcessingFilter ssoFilter() {
-//	public Oauth2ClientFilter ssoFilter() {
 //		Oauth2ClientFilter sartuFilter = new Oauth2ClientFilter("/");
+		// Crear sartuFilter para que procese/detecte la URL "/" y, al acceder, redirija a Sartu (SSO)
 		OAuth2ClientAuthenticationProcessingFilter sartuFilter = new OAuth2ClientAuthenticationProcessingFilter("/");
 //		OauthFilter oauthFilter = new OauthFilter("/");
+		// Asigna RestTemplate al filtro
 		sartuFilter.setRestTemplate(sartuRestTemplate());
+		// Configura el servicio para gestionar los tokens
 		sartuFilter.setTokenServices(tokenServices());
+		// Configura la URL a la que se redireccionará en caso de éxito en la autenticación
 		sartuFilter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/inicio"));
 //		filter.setTokenServices(new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId()));
+		
+		// Devuelve el filtro
 		return sartuFilter;
 	}
 
@@ -161,15 +186,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return defaultTokenServices;
 	}
 
+	/**
+	 * Define un TokenStore para almacenar y convertir los tokens JWT
+	 * 
+	 * @return {@link TokenStore} con el convertidor de tokens JWT
+	 */
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
 
+	/**
+	 * Define JwtAccessTokenConverter que se encarga de convertir tokens JWT. Codifica y decodifica el token JWT y 
+	 * verica su firma RSA
+	 * 
+	 * @return {@link JwtAccessTokenConverter} configurada con el verificador de firma RSA
+	 */
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		SartuJwtConverter converter = new SartuJwtConverter();
-//		converter.setSigningKey(signingKey);
 		try {
 			converter.setVerifier(rsaVerifier());
 		} catch (Exception e) {
@@ -178,6 +213,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return converter;
 	}
 
+	/**
+	 * Configura los datos del recurso protegido Sartu (SSO)
+	 * @return {@link OAuth2ProtectedResourceDetails} con los datos necesarios para utilizar Sartu (SSO) 
+	 */
 	private OAuth2ProtectedResourceDetails oauthResource() {
 		AuthorizationCodeResourceDetails resource = new AuthorizationCodeResourceDetails();
 		resource.setClientId(clientId);

@@ -16,8 +16,28 @@ public class UsuarioFacadeImpl implements UsuarioFacade {
 	private UsuarioDao usuarioDao;
 
 	@Override
+	public int insertarUsuario(Usuario usuario) {
+		return usuarioDao.insertarUsuario(usuario);
+	}
+
+	@Override
+	public int modificarUsuario(Usuario usuario) {
+		return usuarioDao.modificarUsuario(usuario);
+	}
+
+	@Override
+	public int eliminarUsuario(String id) {
+		return usuarioDao.eliminarUsuario(id);
+	}
+
+	@Override
 	public List<Usuario> leerUsuarios() {
 		return usuarioDao.leerUsuarios();
+	}
+
+	@Override
+	public Usuario leerUsuario(String id) {
+		return usuarioDao.leerUsuario(id);
 	}
 	
 }

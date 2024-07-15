@@ -5,12 +5,16 @@
 <tiles-definitions>
 	
 	<definition name="baseTiles" template="/WEB-INF/jsps/templates/base.jsp">
-		<put-attribute name="header" type="string" value="" />
+		<put-attribute name="header" value="/WEB-INF/jsps/templates/header.jsp" />
 		<put-attribute name="cuerpo" type="string" value="" />
 	</definition>
 
 	<definition name="*" extends="baseTiles">
 		<put-attribute name="cuerpo" value="/WEB-INF/jsps/views/{1}.jsp"/>
+	</definition>
+	
+	<definition name="*/*" extends="baseTiles">
+		<put-attribute name="cuerpo" value="/WEB-INF/jsps/views/{1}/{2}.jsp"/>
 	</definition>
 	
 </tiles-definitions>
