@@ -18,4 +18,5 @@ public class AccesoController {
 	public String error() {
 		return INICIO;
 	}
+	
 }

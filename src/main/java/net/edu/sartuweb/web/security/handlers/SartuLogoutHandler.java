@@ -1,4 +1,4 @@
-package net.edu.sartuweb.web.security;
+package net.edu.sartuweb.web.security.handlers;
 
 import java.io.IOException;
 

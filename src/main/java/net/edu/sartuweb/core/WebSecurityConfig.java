@@ -44,9 +44,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
 
-import net.edu.sartuweb.web.security.SartuJwtConverter;
-import net.edu.sartuweb.web.security.SartuLogoutHandler;
-import net.edu.sartuweb.web.security.SartuLogoutSuccessHandler;
+import net.edu.sartuweb.web.security.converters.SartuJwtConverter;
+import net.edu.sartuweb.web.security.handlers.SartuLogoutHandler;
+import net.edu.sartuweb.web.security.handlers.SartuLogoutSuccessHandler;
 
 /**
  * Configura la autenticación y los filtros de seguridad para la aplicación.
@@ -113,21 +113,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().authorizeRequests()
 			
 			.and()
-			.authorizeRequests()	
+			.authorizeRequests()
 				.antMatchers("/").permitAll()
-				.anyRequest().authenticated()
-			
+				.antMatchers("/**").access("hasRole('ADMINISTRADOR')")
+//			
 				.and()
 				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
 			
 			.httpBasic().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
 			
 			.and()
+			.exceptionHandling()
+				.accessDeniedPage("/accessDenied") //Handler(sartuAccessDeniedException())
+			
+			.and()
 				.logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 				.addLogoutHandler(sartuLogoutHandler())
 //				.logoutSuccessHandler(sartuLogoutSuccessHandler())
-				.invalidateHttpSession(true).clearAuthentication(true)
+				.invalidateHttpSession(true)
+				.clearAuthentication(true)
 				.deleteCookies("JSESSIONID")
 			
 			.and()

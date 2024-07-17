@@ -21,8 +21,6 @@ public class WebExceptionHandler {
 	
 	private static final String HOME = "/SartuIntegracionWEB/";
 	
-//	private static final String PAGINA_ERROR = "/SartuIntegracionWEB/error";
-	
 	@ExceptionHandler(Exception.class)
 	public RedirectView handleException(Exception exception, HttpServletRequest request, HttpSession session){
 		LOGGER.error("Se ha producido un error en la aplicación", exception);
