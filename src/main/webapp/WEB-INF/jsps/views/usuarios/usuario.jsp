@@ -1,11 +1,9 @@
 <%@ include file="../../templates/taglibs.jsp" %>
 
 <%@page import="net.edu.sartuweb.core.enums.TipoUsuario"%>
-<%@page import="net.edu.sartuweb.core.enums.Accion"%>
 
 <c:set var="tipo_normal" value='<%=TipoUsuario.NORMAL%>'/>
 <c:set var="tipo_administrador" value='<%=TipoUsuario.ADMINISTRADOR%>'/>
-<c:set var="accion_nuevo" value='<%=Accion.NEW%>'/>
 
 <sec:authentication var="usuarioAutenticado" property="principal" />
 <c:set var="isNuevoUsuario" value="${fn:contains(requestScope['javax.servlet.forward.request_uri'], 'new')}" />

@@ -39,11 +39,11 @@
 			</li>
 			<li class="nav-item ${restriccionesActive}">
 				<spring:url var="urlRestricciones" value="/restricciones" />
-				<a class="nav-link" href="#"><spring:message code="restricciones"/></a>
+				<a class="nav-link" href="${urlRestricciones}"><spring:message code="restricciones"/></a>
 			</li>
 			<li class="nav-item ${accesosActive}">
 				<spring:url var="urlAccesos" value="/accesos" />
-				<a class="nav-link" href="#"><spring:message code="accesos"/></a>
+				<a class="nav-link" href="${urlAccesos}"><spring:message code="accesos"/></a>
 			</li>
 		</ul>
 		

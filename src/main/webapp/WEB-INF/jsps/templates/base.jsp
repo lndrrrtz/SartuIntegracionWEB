@@ -30,6 +30,8 @@
 		
 		<title><spring:message code="integracion.sartu"/></title>
 
+		<spring:message var="formatoFechaDateTime" code="format.date.large" scope="request"/>
+		
 	</head>
 	
 	<body>

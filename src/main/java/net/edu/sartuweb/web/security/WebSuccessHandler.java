@@ -18,7 +18,7 @@ public class WebSuccessHandler extends SavedRequestAwareAuthenticationSuccessHan
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) throws IOException, ServletException {				
+			Authentication authentication) throws IOException, ServletException {
 		String targetUrl = "/inicio";
 		redirectStrategy.sendRedirect(request, response, targetUrl);
 	}

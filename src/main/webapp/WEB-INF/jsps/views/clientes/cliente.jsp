@@ -1,11 +1,9 @@
 <%@ include file="../../templates/taglibs.jsp" %>
 
 <%@page import="net.edu.sartuweb.core.enums.TipoUsuario"%>
-<%@page import="net.edu.sartuweb.core.enums.Accion"%>
 
 <c:set var="tipo_normal" value='<%=TipoUsuario.NORMAL%>'/>
 <c:set var="tipo_administrador" value='<%=TipoUsuario.ADMINISTRADOR%>'/>
-<c:set var="accion_nuevo" value='<%=Accion.NEW%>'/>
 
 <sec:authentication var="usuarioAutenticado" property="principal" />
 <c:set var="isNuevoCliente" value="${fn:contains(requestScope['javax.servlet.forward.request_uri'], 'new')}" />
@@ -65,7 +63,7 @@
 					<i class="far fa-check-circle align-middle fa-lg mr-2"></i>
 					<spring:message code="${successMessage}"/>
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						<span aria-hidden="true">×</span>
+						<span aria-hidden="true">ï¿½</span>
 					</button>
 				</div>
 			</c:when>
